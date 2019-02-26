@@ -26,7 +26,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">Hello World</h3>
+    <h3 class="subtitle">js中绕晕你的true、false</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -43,22 +43,96 @@
     <div class="section">
         <div class="article">
     <div class="main">
-        <h1 class="title">Hello World</h1>
+        <h1 class="title">js中绕晕你的true、false</h1>
         <div class="stuff">
-            <span>一月 14, 2019</span>
+            <span>二月 26, 2019</span>
             
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/js、类型转换、空数组、空对象、/">js、类型转换、空数组、空对象、==</a></li></ul>
+
 
         </div>
         <div class="content markdown">
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>曾经对一个自称是前端leader的面试者提问：js中哪些值转化布尔值为false？面试者却是一脸疑问的回这有好多啊，我怎么给你一一列举？我：？？？这基础不过关啊，难道码代码的时候没有遇到类似的坑吗？so,这位面试者也没有通过面试。<br>那我们就得好好了解一下这些能转为false的值了。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>js的类型转换是很繁琐的，但也是有迹可循的。首先我们来看一下能转化为false的值，见下表：</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>转数字</th>
+<th>转字符串</th>
+<th>转布尔值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>undefined</td>
+<td>NaN</td>
+<td>“undefined”</td>
+<td>false</td>
+</tr>
+<tr>
+<td>null</td>
+<td>0</td>
+<td>“null”</td>
+<td>false</td>
+</tr>
+<tr>
+<td>false</td>
+<td>0</td>
+<td>“false”</td>
+<td>false</td>
+</tr>
+<tr>
+<td>0、-0</td>
+<td>0、-0</td>
+<td>“0”</td>
+<td>false</td>
+</tr>
+<tr>
+<td>NaN</td>
+<td>NaN</td>
+<td>“NaN”</td>
+<td>false</td>
+</tr>
+<tr>
+<td>“”、’’</td>
+<td>0</td>
+<td>“”、’’</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+<p>共6种，剩余的值转化为布尔值时都是true。即这6种在判断X==flase时都为true，而{}、[]放到if判断中都为true，因为数组属于对象类型，对象类型转为布尔类型（ToBoolean 算法）时都是true。提到“==”这里的坑就层出不穷了。</p>
+<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><p>上面提到空数组和空对象在if判断中为true，但</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log([] == <span class="literal">false</span> ? <span class="literal">true</span> : <span class="literal">false</span>);//<span class="literal">true</span></span><br><span class="line">console.log(&#123;&#125; == <span class="literal">false</span> ? <span class="literal">true</span> : <span class="literal">false</span>);//<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>‘==’会对操作值进行隐式转换。转换规则如下：</p>
+<ul>
+<li>一个值是null，另一个是undefined，则它们相等。</li>
+<li>一个值是数字，另一个是字符串，先将字符串调用Number()转换成数字，然后使用转换后的值进行比较。</li>
+<li>一个值为布尔值，则在比较之前先将其转换为数值。</li>
+<li>一个值是对象，另一个值是数字或字符串，则调用对象的valueOf()转换为原始值，然后再进行比较。</li>
+<li>两个值都是对象，则比较它们是不是指向同一个对象</li>
+<li>其他类型之间的比较均不相等。<br>上述表达式中</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Number([]) == 0 ;//true Number([])=&gt;0</span><br><span class="line">Number(&#123;&#125;) == 0 ;//false Number(&#123;&#125;)=&gt;NaN</span><br></pre></td></tr></table></figure>
+<p>类似的[] == ![] // true , 即![] =&gt; false =&gt; 0,[] =&gt; 0.和下面这种</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">console.log(([0]) ? true : false);//true [0]为object</span><br><span class="line">console.log([0] == false);//true Number([0]) =&gt; 0</span><br><span class="line">console.log((&#123;x:0&#125; == false) ? true : false); // false Number(&#123;x:0&#125;) =&gt; NaN</span><br></pre></td></tr></table></figure>
+<p>以上提到的Number() 为显示转换，规则为：</p>
+<ul>
+<li>如果是布尔值，true和false分别被转换为1和0</li>
+<li>如果是数字值，返回本身。</li>
+<li>如果是null，返回0.</li>
+<li>如果是undefined，返回NaN。</li>
+<li>如果是字符串，遵循以下规则：<ul>
+<li>如果字符串中只包含数字，则将其转换为十进制（忽略前导0）</li>
+<li>如果字符串中包含有效的浮点格式，将其转换为浮点数值（忽略前导0）</li>
+<li>如果是空字符串，将其转换为0</li>
+<li>如果字符串中包含非以上格式，则将其转换为NaN</li>
+</ul>
+</li>
+<li>如果是对象，则调用对象的valueOf()方法，然后依据前面的规则转换返回的值。如果转换的结果是NaN，则调用对象的toString()方法，再次依照前面的规则转换返回的字符串值。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>“==”隐式转换虽坑但也有灵活的地方，比如一个值为字符串一个为数字的时候可以简化代码量。但请深知这中间的转换规则，否则就是隐藏BUG。</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
