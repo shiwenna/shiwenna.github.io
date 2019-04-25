@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://shiwenna.github.io/">
-        <img width="201" src="../public/img/caoshuangna.png">
+        <img src="img/caoshuangna.png">
     </a>
 </p>
 
