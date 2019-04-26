@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="起因曾经对一个自称是前端leader的面试者提问：js中哪些值转化布尔值为false？面试者却是一脸疑问的回这有好多啊，我怎么给你一一列举？我：？？？这基础不过关啊，难道码代码的时候没有遇到类似的坑,"> 
+    <meta name="description" content="起因曾对一个前端leader的面试者问过这样的问题：js中哪些值转化布尔值为false？面试者却是一脸疑问的怀疑自己听到的问题反问了一句：这有好多啊，我怎么给你一一列举？我：嗯？？？好吧，下一个。为,"> 
     <meta name="author" content="Shuangna Cao"> 
     <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -52,8 +52,8 @@
 
         </div>
         <div class="content markdown">
-            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>曾经对一个自称是前端leader的面试者提问：js中哪些值转化布尔值为false？面试者却是一脸疑问的回这有好多啊，我怎么给你一一列举？我：？？？这基础不过关啊，难道码代码的时候没有遇到类似的坑吗？so,这位面试者也没有通过面试。<br>那我们就得好好了解一下这些能转为false的值了。</p>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>js的类型转换是很繁琐的，但也是有迹可循的。首先我们来看一下能转化为false的值，见下表：</p>
+            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>曾对一个前端leader的面试者问过这样的问题：js中哪些值转化布尔值为false？面试者却是一脸疑问的怀疑自己听到的问题反问了一句：这有好多啊，我怎么给你一一列举？我：嗯？？？好吧，下一个。为什么这么问，大概从开始写前端代码一段时间后你就会遇到false判断的各种坑，层出不穷。为什么会有坑，又怎样避免这些坑？<br>下面，我们就得好好了解一下这些能转为false的值了。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>js的类型转换虽是繁琐的，但也是有迹可循的。首先我们来看一下能转化为false的值，见下表：</p>
 <table>
 <thead>
 <tr>
@@ -102,22 +102,26 @@
 </tr>
 </tbody>
 </table>
-<p>共6种，剩余的值转化为布尔值时都是true。即这6种在判断X==flase时都为true，而{}、[]放到if判断中都为true，因为数组属于对象类型，对象类型转为布尔类型（ToBoolean 算法）时都是true。提到“==”这里的坑就层出不穷了。</p>
+<p>共6种，其余的值转化为布尔值时都是true。即这6种在判断X==flase为true，同样在if判断中会将值先转化为布尔值，因此这6种值在if或三目运算中为flase。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">console.log(undefined ? <span class="literal">true</span> : <span class="literal">false</span>); //<span class="literal">false</span></span><br><span class="line">console.log(null ? <span class="literal">true</span> : <span class="literal">false</span>); //<span class="literal">false</span></span><br><span class="line">console.log(0 ? <span class="literal">true</span> : <span class="literal">false</span>); //<span class="literal">false</span></span><br><span class="line">console.log(<span class="string">'0'</span> ? <span class="literal">true</span> : <span class="literal">false</span>); //<span class="literal">true</span></span><br><span class="line">console.log(<span class="string">'undefined'</span> ? <span class="literal">true</span> : <span class="literal">false</span>); //<span class="literal">true</span></span><br><span class="line">console.log(([0]) ? <span class="literal">true</span> : <span class="literal">false</span>); //<span class="literal">true</span> [0]为object</span><br></pre></td></tr></table></figure>
+<p>而空对象{}、空数组[]直接放到if判断中都为true，因为数组属于对象类型，对象类型转为布尔类型（ToBoolean 算法）时都是true。但当判断[] == false时结果却是true。下面我们就来讨论一下关于“==”的问题。</p>
 <h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><p>上面提到空数组和空对象在if判断中为true，但</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log([] == <span class="literal">false</span> ? <span class="literal">true</span> : <span class="literal">false</span>);//<span class="literal">true</span></span><br><span class="line">console.log(&#123;&#125; == <span class="literal">false</span> ? <span class="literal">true</span> : <span class="literal">false</span>);//<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p>‘==’会对操作值进行隐式转换。转换规则如下：</p>
+<p>这又是为什么呢？原因就是“==”在进行判断前会对两边的操作值进行隐式转换。规则如下：</p>
 <ul>
 <li>一个值是null，另一个是undefined，则它们相等。</li>
 <li>一个值是数字，另一个是字符串，先将字符串调用Number()转换成数字，然后使用转换后的值进行比较。</li>
 <li>一个值为布尔值，则在比较之前先将其转换为数值。</li>
 <li>一个值是对象，另一个值是数字或字符串，则调用对象的valueOf()转换为原始值，然后再进行比较。</li>
 <li>两个值都是对象，则比较它们是不是指向同一个对象</li>
-<li>其他类型之间的比较均不相等。<br>上述表达式中</li>
+<li>其他类型之间的比较均不相等。<br>上述表达式中，与flase比较前先将空对象 {} 与空数组 [] 转换为数值，即</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Number([]) == 0 ;//true Number([])=&gt;0</span><br><span class="line">Number(&#123;&#125;) == 0 ;//false Number(&#123;&#125;)=&gt;NaN</span><br></pre></td></tr></table></figure>
-<p>类似的[] == ![] // true , 即![] =&gt; false =&gt; 0,[] =&gt; 0.和下面这种</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">console.log(([0]) ? true : false);//true [0]为object</span><br><span class="line">console.log([0] == false);//true Number([0]) =&gt; 0</span><br><span class="line">console.log((&#123;x:0&#125; == false) ? true : false); // false Number(&#123;x:0&#125;) =&gt; NaN</span><br></pre></td></tr></table></figure>
-<p>以上提到的Number() 为显示转换，规则为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Number([]) //0</span><br><span class="line">Number(&#123;&#125;) //NaN</span><br><span class="line">Number(<span class="literal">false</span>) //0</span><br></pre></td></tr></table></figure>
+<p>因此，转化为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log([] == <span class="literal">false</span> ? <span class="literal">true</span> : <span class="literal">false</span>); =&gt; Number([]) == Number(<span class="literal">false</span>) =&gt; 0 == 0 =&gt; <span class="literal">true</span></span><br><span class="line">console.log(&#123;&#125; == <span class="literal">false</span> ? <span class="literal">true</span> : <span class="literal">false</span>); =&gt; Number(&#123;&#125;) == Number(<span class="literal">false</span>) =&gt; NaN == 0 =&gt; Number(NaN) == 0 =&gt; NaN == 0 =&gt; <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>类似的[] == ![] // true , 即![] =&gt; false =&gt; 0,[] =&gt; 0。还有下面这种</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">console.log([] == []); //<span class="literal">false</span> 不是同一个对象</span><br><span class="line">console.log(&#123;&#125; == &#123;&#125;); //<span class="literal">false</span> 不是同一个对象</span><br><span class="line">console.log([0] == <span class="literal">false</span>); //<span class="literal">true</span> Number([0]) =&gt; 0</span><br><span class="line">console.log((&#123;x:0&#125; == <span class="literal">false</span>) ? <span class="literal">true</span> : <span class="literal">false</span>); // <span class="literal">false</span> Number(&#123;x:0&#125;) =&gt; NaN</span><br></pre></td></tr></table></figure>
+<p>到这又有个疑问了，为啥空对象转数值是NaN，空数组转数值却是0。这是因为Number() 为显示转换，规则为：</p>
 <ul>
 <li>如果是布尔值，true和false分别被转换为1和0</li>
 <li>如果是数字值，返回本身。</li>
@@ -130,9 +134,12 @@
 <li>如果字符串中包含非以上格式，则将其转换为NaN</li>
 </ul>
 </li>
-<li>如果是对象，则调用对象的valueOf()方法，然后依据前面的规则转换返回的值。如果转换的结果是NaN，则调用对象的toString()方法，再次依照前面的规则转换返回的字符串值。</li>
+<li>如果是对象，则调用对象的valueOf()方法，然后依据前面的规则转换返回的值。如果转换的结果是对象或NaN，则调用对象的toString()方法，再次依照前面的规则转换返回的字符串值。</li>
 </ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>“==”隐式转换虽坑但也有灵活的地方，比如一个值为字符串一个为数字的时候可以简化代码量。但请深知这中间的转换规则，否则就是隐藏BUG。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Number([]) // [].valueOf() =&gt; [].toString() =&gt; <span class="string">""</span> =&gt; 0</span><br><span class="line">Number(&#123;&#125;) // &#123;&#125;.valueOf() =&gt; &#123;&#125;.toString() =&gt; <span class="string">"[object Object]"</span> =&gt; NaN</span><br></pre></td></tr></table></figure>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>很多js教程中会让你使用“===”来取代“==”，目的就是避免自动转换数据类型的情况下造成的不必要的BUG。“==”隐式转换虽坑但也有灵活的地方，比如一个值为字符串一个为数字进行比较的时候或者判断值是否是null或undefined时可以简化代码量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log(<span class="string">"42"</span> == 42) // <span class="literal">true</span> 42 == 42</span><br><span class="line">console.log(null == undefined) // <span class="literal">true</span> 设定这样, 记住就行. 除了这一对外, 其他的值和他们比都返回<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>但请<strong>深知</strong>这中间的转换规则，否则就是隐藏BUG。</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
